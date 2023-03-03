@@ -1,1 +1,61 @@
-[{"id":1,"title":"Remera","price":5000,"thumbnail":"img","code":1,"stock":20},{"id":2,"title":"Bufanda","price":200,"thumbnail":"img","code":2,"stock":20},{"id":3,"title":"Gorro","price":300,"thumbnail":"img","code":3,"stock":20},{"id":4,"title":"Medias","price":400,"thumbnail":"img","code":4,"stock":20},{"id":5,"title":"Pantalones","price":200,"thumbnail":"img","code":5,"stock":20},{"id":6,"title":"Campera","price":1000,"thumbnail":"img","code":6,"stock":20}]
+[
+    {
+        "id": 1,
+        "title": "Remera",
+        "price": 5000,
+        "thumbnail": "img",
+        "code": 1,
+        "stock": 20
+    },
+    {
+        "id": 2,
+        "title": "Bufanda",
+        "price": 200,
+        "thumbnail": "img",
+        "code": 2,
+        "stock": 20
+    },
+    {
+        "id": 3,
+        "title": "Gorro",
+        "price": 300,
+        "thumbnail": "img",
+        "code": 3,
+        "stock": 20
+    },
+    {
+        "id": 4,
+        "title": "Medias",
+        "price": 400,
+        "thumbnail": "img",
+        "code": 4,
+        "stock": 20
+    },
+    {
+        "id": 5,
+        "title": "Pantalones",
+        "price": 200,
+        "thumbnail": "img",
+        "code": 5,
+        "stock": 20
+    },
+    {
+        "id": 6,
+        "title": "Campera",
+        "price": 1000,
+        "thumbnail": "img",
+        "code": 6,
+        "stock": 20
+    },
+    {
+        "id": 7,
+        "title": "Patineta",
+        "description": "patineta plateada",
+        "price": 2900,
+        "thumbnail": "sss",
+        "code": 20,
+        "stock": 20,
+        "category": "herramienta",
+        "status": true
+    }
+]
