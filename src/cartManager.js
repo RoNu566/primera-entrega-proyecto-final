@@ -29,33 +29,34 @@ class CartManager {
     }
   }
   async checkCart(id) {
-    const cart = await this.getCart();
-    const prodCart = cart.find((x) => x.id == id);
+    const carts = await this.getCart();
+    const prodCart = carts.find((x) => x.id == id);
     if (!prodCart) {
-      return (`No se Encontró carrito con ese ID.`);
+      console.log("No se Encontró carrito con ese ID");
     } else {
       return prodCart;
     }
   }
+
   async addProductToCart(cid, product) {
     let carts = await this.getCart();
-    let cartProd = await this.checkCart(cid);
+    let cart = await this.checkCart(cid);
 
-    let producto = cartProd.products.find((prod) => prod.id == product.id)
+    let producto = cart.products.find((prod) => prod.id == product.id)
 
     if (producto) {
       producto.quantity += 1;
-      let ProductosEnCarrito = cartProd.products.find((prod) => prod.id !== producto.id)
+      let ProductosEnCarrito = cart.products.find((prod) => prod.id !== producto.id)
       let CarritoActualizado = [...ProductosEnCarrito, producto];
-      cartProd.products = CarritoActualizado;
+      cart.products = CarritoActualizado;
 
       let othersCarts = carts.filter((cart) => cart.id !== cid) //busco los otros carritos que no tienen ese cartID
-      othersCarts = [...othersCarts, cartProd]
+      othersCarts = [...othersCarts, cart]
       await fs.promises.writeFile(this.#path, JSON.stringify(othersCarts));
     } else {
-      cartProd.products = [...cartProd.products, { id: product.id, quantity: 1 }]
+      cart.products = [...cart.products, { id: product.id, quantity: 1 }]
       let othersCarts = carts.filter((cart) => cart.id !== cid) //bnsuco los carros cuyo id es distino al pasado por aprametro
-      othersCarts = [...othersCarts, cartProd]
+      othersCarts = [...othersCarts, cart]
       await fs.promises.writeFile(this.#path, JSON.stringify(othersCarts));
     }
   }

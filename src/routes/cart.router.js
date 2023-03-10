@@ -1,5 +1,5 @@
 import { Router, json } from "express";
-import CartManager from "../cartManager.js";
+import CartManager from "../cartManager.js"
 import { manager } from "./products.router.js";
 
 const cartRouter = Router();
@@ -21,17 +21,21 @@ cartRouter.post("/", async (req, res) => {
 cartRouter.get("/:cid", async (req, res) => {
   let cid = parseInt(req.params.cid);
   let carrito = await cartManager.checkCart(cid);
-  res.send(carrito);
+  if (!carrito) {
+    res.send("Este carrito no existe")
+  } else {
+    res.send(carrito);
+  }
 });
 
 cartRouter.post("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params;
-  let IdProd = parseInt(pid);
-  let IdCart = parseInt(cid);
+  const IdProd = parseInt(pid);
+  const IdCart = parseInt(cid);
   try {
     let product = await manager.getProductById(IdProd);
     await cartManager.addProductToCart(IdCart, product);
-    res.status(201).send(`Producto con id: ${IdProd} agregado al carrito con id: ${IdCart}`);
+    res.status(201).send(`Producto ${IdProd} agregado al carrito ${IdCart}`);
   } catch (error) {
     res.status(404).send("No se pudo agregar producto al carrito")
   }

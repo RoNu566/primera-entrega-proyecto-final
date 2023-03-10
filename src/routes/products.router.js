@@ -26,9 +26,9 @@ productsRouter.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params
     const product = await manager.getProductById(parseInt(pid))
-    res.send({ status: "succes", payload: product })
+    res.status(201).send(product)
   } catch (err) {
-    res.status(404).send({ status: "error", error: `${err}` })
+    res.status(404).send("Producto no encontrado")
   }
 })
 

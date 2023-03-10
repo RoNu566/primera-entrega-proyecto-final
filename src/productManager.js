@@ -30,7 +30,7 @@ class ProductManager {
     const products = await this.getProducts();
     const aux = products.find((product) => product.id == id);
     if (!aux) {
-      return console.log("Producto no encontrado");
+      console.log("Producto no encontrado");
     } else {
       return aux;
     }
