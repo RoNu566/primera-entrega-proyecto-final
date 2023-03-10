@@ -42,6 +42,7 @@ class CartManager {
     let cartProd = await this.checkCart(cid);
 
     let producto = cartProd.products.find((prod) => prod.id == product.id)
+
     if (producto) {
       producto.quantity += 1;
       let ProductosEnCarrito = cartProd.products.find((prod) => prod.id !== producto.id)
