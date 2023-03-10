@@ -36,7 +36,7 @@ productsRouter.post("/", async (req, res) => {
   const { title, description, price, thumbail = [], code, stock, status = true, category } = req.body;
   try {
     await manager.addProduct(title, description, parseInt(price), thumbail, parseInt(code), parseInt(stock), status, category);
-    // req.io.emit("new-product", req.body)
+    req.io.emit("new-product", req.body)
     res.status(201).send("Producto agregado")
   } catch (err) {
     res.status(404).send(" No se pudo cargar el producto")
@@ -50,9 +50,8 @@ productsRouter.put("/:pid", async (req, res) => {
     await manager.updateProduct(id, req.body)
 
     const products = await manager.getProducts()
-    // req.io.emit("update-product", products)
-
-    res.send({ status: "succes", payload: await manager.getProductById(id) })
+    req.io.emit("update-product", products)
+    res.status(201).send(await manager.getProductById(id))
   } catch (err) {
     res.status(404).send("No se pudo actualizar el producto")
   }
@@ -65,9 +64,8 @@ productsRouter.delete("/:pid", async (req, res) => {
     await manager.deleteProduct(id)
 
     const products = await manager.getProducts()
-    // req.io.emit("delete-product", products)
-
-    res.send({ status: "succes", payload: "Producto eliminado" })
+    req.io.emit("delete-product", products);
+    res.status(201).send("Producto eliminado")
   } catch (err) {
     res.status(404).send("No se pudo eliminar el producto")
   }
