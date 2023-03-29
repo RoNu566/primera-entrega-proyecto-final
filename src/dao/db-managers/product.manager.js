@@ -1,4 +1,5 @@
 import productModel from "../models/products.models.js";
+import cartModel from "../models/cart.models.js";
 
 class ProductManager {
 
@@ -26,16 +27,16 @@ class ProductManager {
   }
 
   async addProduct(title, description, price, thumbnail, code, stock, category, status) {
-    const product = { title, description, price, thumbnail, code, stock, category, status };
+    const product = { title, description, price, thumbnail, code, stock, category, status }
     const result = await productModel.create(product);
+    console.log("Producto Agregado!")
     return result;
   }
 
   async updateProduct(id, info) {
     try {
-      const updatedProduct = await productModel.findByIdAndUpdate({ _id: id }, info); 4
-      return updatedProduct
-
+      const updatedProduct = await productModel.findByIdAndUpdate({ _id: id }, info);
+      return updatedProduct;
     } catch (Error) {
       console.log("No se pudo actualizar el producto")
       throw new Error;
@@ -50,8 +51,6 @@ class ProductManager {
       console.log("No se ha podido eliminar el producto")
       throw new Error;
     }
-    const products = await this.getProducts();
-
   }
 }
 

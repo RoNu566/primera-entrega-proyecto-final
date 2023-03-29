@@ -4,7 +4,7 @@ import DbProductManager from "../dao/db-managers/product.manager.js"
 import DbCartManager from "../dao/db-managers/cart.manager.js"
 
 const config = {
-    persistanceType: "file"
+    persistanceType: "db"
 }
 
 let ProductManager, CartManager;

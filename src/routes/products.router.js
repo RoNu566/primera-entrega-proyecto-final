@@ -5,7 +5,7 @@ import { ProductManager } from "../dao/index.js"
 const productsRouter = Router()
 productsRouter.use(json())
 
-const manager = new ProductManager()
+const manager = new ProductManager();
 
 productsRouter.get("/", async (req, res) => {
   try {
@@ -43,13 +43,13 @@ productsRouter.post("/", async (req, res) => {
     const category = req.body.category;
     const status = true;
 
-    const result = await manager.addProduct(title, description, price, thumbnail, code, stock, status, category, status);
-    req.io.emit("new-product", result)
-    res.status(201).send("Producto agregado")
-  } catch (err) {
-    res.status(404).send("No se pudo cargar el producto")
+    const result = await manager.addProduct(title, description, price, thumbnail, code, stock, category, status);
+    req.io.emit("new-product", result);
+    res.status(201).send("Producto agregado!!");
+  } catch (e) {
+    res.status(404).send(`No se pudo agregar el producto`);
   }
-})
+});
 
 productsRouter.put("/:pid", async (req, res) => {
   try {

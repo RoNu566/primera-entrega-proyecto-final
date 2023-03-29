@@ -1,9 +1,9 @@
 import express from "express";
-import cartRouter from "./routes/cart.router.js";
 import productsRouter from "./routes/products.router.js";
+import cartRouter from "./routes/cart.router.js";
 import { engine } from "express-handlebars";
-import __dirname from "./utils.js"
-import viewsRouter from "./routes/views.router.js";
+import __dirname from "./utils.js";
+import viewsRouter from "./routes/views.router.js"
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 
