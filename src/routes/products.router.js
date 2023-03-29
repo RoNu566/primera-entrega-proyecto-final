@@ -1,11 +1,11 @@
 import { json, Router } from "express";
-import ProductManager from "../productManager.js";
+import { ProductManager } from "../dao/index.js"
 
 
 const productsRouter = Router()
 productsRouter.use(json())
 
-const manager = new ProductManager("./src/products.json")
+const manager = new ProductManager()
 
 productsRouter.get("/", async (req, res) => {
   try {
@@ -25,7 +25,7 @@ productsRouter.get("/", async (req, res) => {
 productsRouter.get("/:pid", async (req, res) => {
   try {
     const { pid } = req.params
-    const product = await manager.getProductById(parseInt(pid))
+    const product = await manager.getProductById(pid)
     res.status(201).send(product)
   } catch (err) {
     res.status(404).send("Producto no encontrado")
@@ -33,20 +33,28 @@ productsRouter.get("/:pid", async (req, res) => {
 })
 
 productsRouter.post("/", async (req, res) => {
-  const { title, description, price, thumbail = [], code, stock, status = true, category } = req.body;
   try {
-    await manager.addProduct(title, description, parseInt(price), thumbail, parseInt(code), parseInt(stock), status, category);
-    req.io.emit("new-product", req.body)
+    const title = req.body.title;
+    const description = req.body.description;
+    const price = Number(req.body.price);
+    const thumbnail = req.body.thumbnail;
+    const code = Number(req.body.code);
+    const stock = Number(req.body.stock);
+    const category = req.body.category;
+    const status = true;
+
+    const result = await manager.addProduct(title, description, price, thumbnail, code, stock, status, category, status);
+    req.io.emit("new-product", result)
     res.status(201).send("Producto agregado")
   } catch (err) {
-    res.status(404).send(" No se pudo cargar el producto")
+    res.status(404).send("No se pudo cargar el producto")
   }
 })
 
 productsRouter.put("/:pid", async (req, res) => {
   try {
-    const { pid } = req.params
-    const id = parseInt(pid)
+    const { pid } = req.params;
+    const id = (pid);
     await manager.updateProduct(id, req.body)
 
     const products = await manager.getProducts()
@@ -60,7 +68,7 @@ productsRouter.put("/:pid", async (req, res) => {
 productsRouter.delete("/:pid", async (req, res) => {
   try {
     const { pid } = req.params
-    const id = parseInt(pid)
+    const id = pid
     await manager.deleteProduct(id)
 
     const products = await manager.getProducts()

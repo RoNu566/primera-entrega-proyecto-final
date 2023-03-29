@@ -1,11 +1,11 @@
 import { Router, json } from "express";
-import CartManager from "../cartManager.js"
+import { CartManager } from "../dao/index.js"
 import { manager } from "./products.router.js";
 
 const cartRouter = Router();
 cartRouter.use(json())
 
-const cartManager = new CartManager("./src/cart.json");
+const cartManager = new CartManager();
 
 
 cartRouter.get("/", async (req, res) => {
@@ -19,7 +19,7 @@ cartRouter.post("/", async (req, res) => {
 });
 
 cartRouter.get("/:cid", async (req, res) => {
-  let cid = parseInt(req.params.cid);
+  let cid = req.params.cid;
   let carrito = await cartManager.checkCart(cid);
   if (!carrito) {
     res.send("Este carrito no existe")
@@ -30,8 +30,8 @@ cartRouter.get("/:cid", async (req, res) => {
 
 cartRouter.post("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params;
-  const IdProd = parseInt(pid);
-  const IdCart = parseInt(cid);
+  const IdProd = pid;
+  const IdCart = cid;
   try {
     let product = await manager.getProductById(IdProd);
     await cartManager.addProductToCart(IdCart, product);

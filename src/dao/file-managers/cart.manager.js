@@ -1,14 +1,19 @@
 import fs from "fs";
+import __dirname from "../../utils.js";
+
+
+const path = __dirname + "/dao/json/cart.json"
 
 class CartManager {
-  #path;
-  constructor(path) {
-    this.#path = path;
+
+  constructor() {
+    console.log("Working on FileSystem")
+
   }
 
   async getCart() {
     try {
-      const carts = await fs.promises.readFile(this.#path, "utf-8");
+      const carts = await fs.promises.readFile(path, "utf-8");
       return JSON.parse(carts);
     } catch (error) {
       return [];
@@ -23,7 +28,7 @@ class CartManager {
         products: []
       }
       carts = [...carts, carrito];
-      await fs.promises.writeFile(this.#path, JSON.stringify(carts))
+      await fs.promises.writeFile(path, JSON.stringify(carts))
     } catch (error) {
       return "error";
     }
@@ -52,12 +57,12 @@ class CartManager {
 
       let othersCarts = carts.filter((cart) => cart.id !== cid) //busco los otros carritos que no tienen ese cartID
       othersCarts = [...othersCarts, cart]
-      await fs.promises.writeFile(this.#path, JSON.stringify(othersCarts));
+      await fs.promises.writeFile(path, JSON.stringify(othersCarts));
     } else {
       cart.products = [...cart.products, { id: product.id, quantity: 1 }]
       let othersCarts = carts.filter((cart) => cart.id !== cid) //bnsuco los carros cuyo id es distino al pasado por aprametro
       othersCarts = [...othersCarts, cart]
-      await fs.promises.writeFile(this.#path, JSON.stringify(othersCarts));
+      await fs.promises.writeFile(path, JSON.stringify(othersCarts));
     }
   }
 }
