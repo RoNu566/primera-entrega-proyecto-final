@@ -1,4 +1,5 @@
 import express from "express";
+import { json } from "express";
 import productsRouter from "./routes/products.router.js";
 import cartRouter from "./routes/cart.router.js";
 import { engine } from "express-handlebars";
@@ -6,10 +7,15 @@ import __dirname from "./utils.js";
 import viewsRouter from "./routes/views.router.js"
 import { Server } from "socket.io";
 import mongoose from "mongoose";
+import ChatManager from "./dao/db-managers/chat.manager.js";
 
 const app = express();
+app.use(json());
 
 app.use(express.static(__dirname + "/../public"))
+
+let messages = [];
+const chatManager = new ChatManager();
 
 //-----Hnadlebars-----//
 app.engine("handlebars", engine());
@@ -26,6 +32,18 @@ const io = new Server(httpServer);
 
 io.on("connection", (socket) => {
   console.log("New Client Connected")
+
+  socket.on("messages", async (data) => {
+    const { username, message } = await chatManager.newMessage(data)
+    messages.push(data);
+
+    io.emit("messages", messages)
+  });
+
+  socket.on("new-user", (username) => {
+    socket.emit(messages, messages);
+    socket.broadcast.emit("new-user", username)
+  })
 });
 
 app.use((req, res, next) => {
