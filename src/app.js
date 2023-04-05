@@ -56,6 +56,7 @@ app.use((req, res, next) => {
 app.use("/", viewsRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
+app.use("/products", viewsRouter);
 
 //-----Moongose-----//
 mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority")

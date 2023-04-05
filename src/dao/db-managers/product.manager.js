@@ -8,14 +8,29 @@ class ProductManager {
     console.log("Working on DB")
   }
 
-  async getProducts() {
+  // async getProducts() {
+  //   try {
+  //     const products = await productModel.find().lean();
+  //     return products
+  //   } catch (error) {
+  //     return [];
+  //   }
+  // }
+
+  async getProducts(limit, page, sort) {
+    let limitIn = limit ? limit : 10;
+    let pageIn = page ? page : 1;
+    let sortIn = sort ? { price: sort } : null;
+
+    let Params = { limit: limitIn, page: pageIn, sort: sortIn, lean: true }
     try {
-      const products = await productModel.find().lean();
-      return products
+      const products = await productModel.paginate({}, Params)
+      return products;
     } catch (error) {
       return [];
     }
   }
+
 
   async getProductById(id) {
     const aux = await productModel.findById(id);

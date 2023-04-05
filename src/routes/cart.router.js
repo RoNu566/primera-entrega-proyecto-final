@@ -41,4 +41,27 @@ cartRouter.post("/:cid/product/:pid", async (req, res) => {
   }
 });
 
+
+cartRouter.delete("/:cid/product/:pid", async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    await cartManager.deletProdfromCart(cid, pid);
+    res.send({ status: "success", payload: "Seelimino el producto del carrito" })
+  } catch (err) {
+    res.send({ status: "failed", payload: "No se pudo eliminar el producto del carrito" })
+  }
+});
+
+cartRouter.delete("/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    await cartManager.deleteCar(cid);
+    res.send({ status: "Success", payload: "Se elimino el carrito" })
+  } catch (err) {
+    res.send({ status: "Failed", payload: "No se ha eliminado el carrito" })
+  }
+
+})
+
+
 export default cartRouter;

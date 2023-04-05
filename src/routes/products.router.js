@@ -9,18 +9,28 @@ const manager = new ProductManager();
 
 productsRouter.get("/", async (req, res) => {
   try {
-    const products = await manager.getProducts()
-    const { limit } = req.query
-
-    if (limit) {
-      const productsLimit = products.slice(0, limit)
-      return res.send(productsLimit)
-    }
-    res.send(products)
+    const { limit, page, sort } = req.params;
+    const products = await manager.getProducts(limit, page, sort);
+    res.send({ status: "success", payload: products });
   } catch (err) {
     res.status(404).send("No se pudo obtener la lista de productos")
   }
 })
+
+// productsRouter.get("/", async (req, res) => {
+//   try {
+//     const products = await manager.getProducts()
+//     const { limit } = req.query
+
+//     if (limit) {
+//       const productsLimit = products.slice(0, limit)
+//       return res.send(productsLimit)
+//     }
+//     res.send(products)
+//   } catch (err) {
+//     res.status(404).send("No se pudo obtener la lista de productos")
+//   }
+// })
 
 productsRouter.get("/:pid", async (req, res) => {
   try {
