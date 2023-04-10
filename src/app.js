@@ -8,6 +8,7 @@ import viewsRouter from "./routes/views.router.js"
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import ChatManager from "./dao/db-managers/chat.manager.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(json());
@@ -61,3 +62,14 @@ app.use("/products", viewsRouter);
 //-----Moongose-----//
 mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority")
 console.log("Conected to Db")
+
+//-------------cookies-------//
+const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+
+app.get("/set-cookie", (req, res) => {
+  res
+    .cookie("mus_cookie", "Esta es una cookie", {
+      maxAge: thirtyDaysInMs,
+    })
+    .send("Cookie set");
+}); 
