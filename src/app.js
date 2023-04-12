@@ -1,16 +1,24 @@
 import express from "express";
-import { json } from "express";
-import productsRouter from "./routes/products.router.js";
-import cartRouter from "./routes/cart.router.js";
+import { json, urlencoded } from "express";
 import { engine } from "express-handlebars";
 import __dirname from "./utils.js";
-import viewsRouter from "./routes/views.router.js"
 import { Server } from "socket.io";
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
-import ChatManager from "./dao/db-managers/chat.manager.js";
 import session from "express-session";
+import MongoStore from "connect-mongo";
+import path from "path"
+//Routers//
+import productsRouter from "./routes/products.router.js";
+import cartRouter from "./routes/cart.router.js";
+import viewsRouter from "./routes/views.router.js"
+import ChatManager from "./dao/db-managers/chat.manager.js";
+import authRouter from "./routes/auth.router.js";
+
 const app = express();
 app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(express.static(__dirname + "/../public"))
 
@@ -20,7 +28,8 @@ const chatManager = new ChatManager();
 //-----Hnadlebars-----//
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
-app.set("views", __dirname + "/views");
+app.set("views", path.join(__dirname, "/views"));
+
 
 
 //-----Socket-----//
@@ -57,60 +66,69 @@ app.use("/", viewsRouter)
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/products", viewsRouter);
+app.use("/login", viewsRouter);
+app.use("/profile", viewsRouter);
+app.use("/signIn", viewsRouter);
+app.use("/api/session", authRouter);
 
 //-----Moongose-----//
-mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority")
-console.log("Conected to Db")
+mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority").then((conn) => {
+  console.log("Conected to Db")
+});
+
 
 //-------------session-------//
 app.use(
   session({
+    store: MongoStore.create({
+      mongoUrl: "mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority",
+    }),
     secret: "my-secret",
     saveUninitialized: true,
     resave: true,
-  })
-);
-app.get("/session", (req, res) => {
-  if (req.session.counter) {
-    req.session.counter++;
+  }));
 
-    return res.send(`Cantidad de visitas ${req.send.counter}`);
-  }
+// app.get("/session", (req, res) => {
+//   if (req.session.counter) {
+//     req.session.counter++;
 
-  req.session.counter = 1;
-  res.send("Welcome!");
-});
+//     return res.send(`Cantidad de visitas ${req.send.counter}`);
+//   }
 
-app.use(express.json());
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
+//   req.session.counter = 1;
+//   res.send("Welcome!");
+// });
 
-  if (username !== "user" && password !== "password") {
-    return res.status(401).send("Login failed");
-  }
-  req.session.user = username;
-  req.session.isAdmin = true;
 
-  res.send("login successful");
-});
+// app.post("/login", (req, res) => {
+//   const { username, password } = req.body;
 
-function authenticate(req, res, next) {
-  if (req.session.user === "user" && req.session.isAdmin) {
-    return next();
-  }
+//   if (username !== "user" && password !== "password") {
+//     return res.status(401).send("Login failed");
+//   }
+//   req.session.user = username;
+//   req.session.isAdmin = true;
 
-  return res.status(401).send("Error de autentificacion");
-}
+//   res.send("login successful");
+// });
 
-app.get("/privado", authenticate, (req, res) => {
-  res.send("Login OK");
-});
+// function authenticate(req, res, next) {
+//   if (req.session.user === "user" && req.session.isAdmin) {
+//     return next();
+//   }
 
-app.post("/logout", (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(500).send("Internal server error");
-    }
-    res.send("logout OK");
-  });
-});
+//   return res.status(401).send("Error de autentificacion");
+// }
+
+// app.get("/privado", authenticate, (req, res) => {
+//   res.send("Login OK");
+// });
+
+// app.post("/logout", (req, res) => {
+//   req.session.destroy((err) => {
+//     if (err) {
+//       return res.status(500).send("Internal server error");
+//     }
+//     res.send("logout OK");
+//   });
+// });

@@ -1,5 +1,10 @@
 <div>
-    <h1>Productos</h1>
+    <h1>Bienvenido {{user.user}}</h1>
+    <div>
+        <form method="post" action="/api/session/logout">
+        <button type="submit">Log-out!</button>
+        </form>
+    </div>
 <ul>
     {{#each products.docs}}
     <li>

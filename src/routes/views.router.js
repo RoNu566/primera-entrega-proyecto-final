@@ -21,9 +21,10 @@ viewsRouter.get("/real-time-products", async (req, res) => {
 });
 
 viewsRouter.get("/products", async (req, res) => {
+    const data = req.session
     const { page } = req.query;
     const products = await productModel.paginate({}, { limit: 4, lean: true, page: page ?? 1 })
-    res.render("products", { products })
+    res.render("products", { products, data })
 
 });
 
@@ -34,6 +35,23 @@ viewsRouter.get("/chat", async (req, res) => {
     } catch (Err) {
         console.log("No se pudieron obtener los mensajes!")
     }
-})
+});
 
-export default viewsRouter
+//Login//
+
+viewsRouter.get("/login", async (req, res) => {
+    console.log(req.session)
+    const data = req.session;
+    res.render("login", { data })
+});
+
+viewsRouter.get("/profile", async (req, res) => {
+    const data = req.session;
+    res.render("profile", { data })
+});
+
+viewsRouter.get("/signIn", async (req, res) => {
+    res.render("signIn")
+});
+
+export default viewsRouter;
