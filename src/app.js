@@ -8,8 +8,7 @@ import viewsRouter from "./routes/views.router.js"
 import { Server } from "socket.io";
 import mongoose from "mongoose";
 import ChatManager from "./dao/db-managers/chat.manager.js";
-import cookieParser from "cookie-parser";
-
+import session from "express-session";
 const app = express();
 app.use(json());
 
@@ -63,13 +62,55 @@ app.use("/products", viewsRouter);
 mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority")
 console.log("Conected to Db")
 
-//-------------cookies-------//
-const thirtyDaysInMs = 30 * 24 * 60 * 60 * 1000;
+//-------------session-------//
+app.use(
+  session({
+    secret: "my-secret",
+    saveUninitialized: true,
+    resave: true,
+  })
+);
+app.get("/session", (req, res) => {
+  if (req.session.counter) {
+    req.session.counter++;
 
-app.get("/set-cookie", (req, res) => {
-  res
-    .cookie("mus_cookie", "Esta es una cookie", {
-      maxAge: thirtyDaysInMs,
-    })
-    .send("Cookie set");
-}); 
+    return res.send(`Cantidad de visitas ${req.send.counter}`);
+  }
+
+  req.session.counter = 1;
+  res.send("Welcome!");
+});
+
+app.use(express.json());
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username !== "user" && password !== "password") {
+    return res.status(401).send("Login failed");
+  }
+  req.session.user = username;
+  req.session.isAdmin = true;
+
+  res.send("login successful");
+});
+
+function authenticate(req, res, next) {
+  if (req.session.user === "user" && req.session.isAdmin) {
+    return next();
+  }
+
+  return res.status(401).send("Error de autentificacion");
+}
+
+app.get("/privado", authenticate, (req, res) => {
+  res.send("Login OK");
+});
+
+app.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res.status(500).send("Internal server error");
+    }
+    res.send("logout OK");
+  });
+});
