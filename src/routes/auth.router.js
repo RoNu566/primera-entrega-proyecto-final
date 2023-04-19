@@ -27,7 +27,7 @@ authRouter.post("/signIn", async (req, res) => {
         }
     }
     catch (error) {
-        res.send({ status: 401, payload: "Error !" })
+        res.send({ status: 401, payload: "Error al registrar usuario!" })
     }
 });
 
@@ -47,7 +47,7 @@ authRouter.post("/login", async (req, res) => {
             res.send("Usuario y/o contraseña incorrecto")
         }
     } catch (error) {
-        res.status(401).send("Error de autentificación")
+        res.status(403).send("Error de autentificación")
     }
 });
 
@@ -58,7 +58,7 @@ authRouter.post("/logout", (req, res) => {
         } else {
             res.redirect("/login")
         }
-    })
+    });
 });
 
 export default authRouter;

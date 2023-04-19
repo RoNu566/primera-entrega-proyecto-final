@@ -60,6 +60,18 @@ app.use((req, res, next) => {
   next();
 });
 
+//-------------session-------//
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: "mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority",
+    }),
+    secret: "my-secret",
+    saveUninitialized: true,
+    resave: true,
+  }));
+
+
 //-----Router-----//
 
 app.use("/", viewsRouter)
@@ -77,16 +89,6 @@ mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongo
 });
 
 
-//-------------session-------//
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: "mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority",
-    }),
-    secret: "my-secret",
-    saveUninitialized: true,
-    resave: true,
-  }));
 
 // app.get("/session", (req, res) => {
 //   if (req.session.counter) {
