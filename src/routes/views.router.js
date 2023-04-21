@@ -54,4 +54,8 @@ viewsRouter.get("/signIn", async (req, res) => {
     res.render("signIn")
 });
 
+viewsRouter.get("/forgot", async (req, res) => {
+    res.render("forgot")
+});
+
 export default viewsRouter;

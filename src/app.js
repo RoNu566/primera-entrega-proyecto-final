@@ -1,7 +1,7 @@
 import express from "express";
 import { json, urlencoded } from "express";
 import { engine } from "express-handlebars";
-import __dirname from "./utils.js";
+import { __dirname } from "./utils.js";
 import { Server } from "socket.io";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
@@ -14,6 +14,9 @@ import cartRouter from "./routes/cart.router.js";
 import viewsRouter from "./routes/views.router.js"
 import ChatManager from "./dao/db-managers/chat.manager.js";
 import authRouter from "./routes/auth.router.js";
+
+import passport from "passport";
+import { initializedPassport } from "./config/passport.config.js";
 
 const app = express();
 app.use(json());
@@ -71,6 +74,11 @@ app.use(
     resave: true,
   }));
 
+
+//----Passport---//
+initializedPassport();
+app.use(passport.initialize());
+app.use(passport.session());
 
 //-----Router-----//
 
