@@ -11,7 +11,11 @@ authRouter.use(urlencoded({ extended: true }));
 authRouter.post("/signIn", passport.authenticate("singupStrategy", {
     failureRedirect: "/api/session/failure-signup"
 }), (req, res) => {
-    res.send("Usuario registrado exitosamente!")
+    req.session.user = req.user.name
+    req.session.email = req.user.email
+    req.session.rol = "user";
+    console.log(req.session)
+    res.send(`Usuario registrado exitosamente! Ingresa a tu pérfil haciendo click <a href="/profile">Aquí</a>`)
 });
 
 authRouter.get("/failure-signup", (req, res) => {
@@ -22,7 +26,11 @@ authRouter.get("/github", passport.authenticate("githubSignup"));
 authRouter.get("/github-callback", passport.authenticate("githubSignup", {
     failureRedirect: "/api/session/failure-signup"
 }), (req, res) => {
-    res.send("Usuario autenticado correctamente")
+    req.session.user = req.user.name
+    req.session.email = req.user.email
+    req.session.rol = "user"
+    console.log(req.session)
+    res.send(`Usuario registrado exitosamente! Ingresa a tu pérfil haciendo click <a href="/profile">Aquí</a>`)
 });
 
 authRouter.post("/login", async (req, res) => {

@@ -22,7 +22,7 @@ const initializedPassport = () => {
                     age,
                     email: username,
                     password: hashPassword(password),
-                    rol,
+                    rol: "user"
                 };
                 const userCreated = await usersModel.create(nuevoUsuario);
                 return done(null, userCreated);
