@@ -8,38 +8,21 @@ const authRouter = Router();
 authRouter.use(json());
 authRouter.use(urlencoded({ extended: true }));
 
-authRouter.post("/signIn", async (req, res) => {
-    try {
-        const { name, age, email, password } = req.body;
-        const user = await usersModel.findOne({ email: email })
-        let rol;
-        if (!user) {
-            if (email === "adminCoder@coder.com" & password === "adminCod3r123") {
-                rol = "admin"
-            } else {
-                rol = "user";
-            }
-            const nuevoUsuario = {
-                name,
-                age,
-                email,
-                password: hashPassword(password),
-                rol,
-            }
+authRouter.post("/signIn", passport.authenticate("singupStrategy", {
+    failureRedirect: "/api/session/failure-signup"
+}), (req, res) => {
+    res.send("Usuario registrado exitosamente!")
+});
 
-            const newUser = await usersModel.create(nuevoUsuario);
-            req.session.user = newUser.name
-            req.session.email = newUser.email
-            req.session.rol = newUser.rol
-            console.log("Se registro el usuario correctamente!");
-            res.redirect("/profile");
-        } else {
-            res.send("El usuario ingresado ya existe!")
-        }
-    }
-    catch (error) {
-        res.send({ status: 401, payload: "Error al registrar usuario!" })
-    }
+authRouter.get("/failure-signup", (req, res) => {
+    res.send("Error, no se ha resigstrado el usuario")
+});
+
+authRouter.get("/github", passport.authenticate("githubSignup"));
+authRouter.get("/github-callback", passport.authenticate("githubSignup", {
+    failureRedirect: "/api/session/failure-signup"
+}), (req, res) => {
+    res.send("Usuario autenticado correctamente")
 });
 
 authRouter.post("/login", async (req, res) => {
@@ -89,3 +72,37 @@ authRouter.post("/forgot", async (req, res) => {
 });
 
 export default authRouter;
+
+// authRouter.post("/signIn", async (req, res) => {
+//     try {
+//         const { name, age, email, password } = req.body;
+//         const user = await usersModel.findOne({ email: email })
+//         let rol;
+//         if (!user) {
+//             if (email === "adminCoder@coder.com" & password === "adminCod3r123") {
+//                 rol = "admin"
+//             } else {
+//                 rol = "user";
+//             }
+//             const nuevoUsuario = {
+//                 name,
+//                 age,
+//                 email,
+//                 password: hashPassword(password),
+//                 rol,
+//             }
+
+//             const newUser = await usersModel.create(nuevoUsuario);
+//             req.session.user = newUser.name
+//             req.session.email = newUser.email
+//             req.session.rol = newUser.rol
+//             console.log("Se registro el usuario correctamente!");
+//             res.redirect("/profile");
+//         } else {
+//             res.send("El usuario ingresado ya existe!")
+//         }
+//     }
+//     catch (error) {
+//         res.send({ status: 401, payload: "Error al registrar usuario!" })
+//     }
+// });
