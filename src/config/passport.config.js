@@ -3,6 +3,9 @@ import localStrategy from "passport-local";
 import usersModel from "../dao/models/users.model.js";
 import { hashPassword, validatePassword } from "../utils.js";
 import GithubStrategy from "passport-github2";
+import { CartManager } from "../dao/index.js";
+
+const cartToWork = new CartManager;
 
 const initializedPassport = () => {
     passport.use("singupStrategy", new localStrategy(
@@ -12,17 +15,19 @@ const initializedPassport = () => {
         },
         async (req, username, password, done) => {
             try {
-                const { name, age } = req.body;
+                const { name, last_name, age } = req.body;
                 const user = await usersModel.findOne({ email: username });
                 if (user) {
                     return done(null, false)
                 }
                 const nuevoUsuario = {
                     name,
+                    last_name,
                     age,
                     email: username,
                     password: hashPassword(password),
-                    rol: "user"
+                    rol,
+                    cart: await cartToWork.addCart(),
                 };
                 const userCreated = await usersModel.create(nuevoUsuario);
                 return done(null, userCreated);
@@ -32,6 +37,7 @@ const initializedPassport = () => {
 
         }
     ));
+
 
     passport.use("githubSignup", new GithubStrategy(
         {

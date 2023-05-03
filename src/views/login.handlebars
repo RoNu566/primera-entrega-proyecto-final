@@ -1,5 +1,14 @@
 <h1>Bienvenido al Login</h1>
 <div>
+    <form method="post" action="/api/session/login">
+    <input type="text" placeholder="email" name="email"/><br>
+    <input type="password" placeholder="password" name="password"/><br>
+    <button type="submit">LogIn!</button><br>
+    <a href="/forgot">Olvidaste tu contraseña?</a>
+    </form>
+</div>
+
+<div>
    <a href="/api/session/github">Accede utilizando Github</a>
 </div>
 

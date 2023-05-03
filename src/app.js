@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import session from "express-session";
 import MongoStore from "connect-mongo";
-import path from "path"
+import path from "path";
 //Routers//
 import productsRouter from "./routes/products.router.js";
 import cartRouter from "./routes/cart.router.js";

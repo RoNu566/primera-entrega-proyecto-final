@@ -53,6 +53,13 @@ authRouter.post("/login", async (req, res) => {
     }
 });
 
+authRouter.get("/current", (req, res) => {
+    if (req.session) {
+        return res.send({ userInfo: req.session.name });
+    }
+    res.send("Usuario No Logueado");
+});
+
 authRouter.post("/logout", (req, res) => {
     req.session.destroy(error => {
         if (error) {
