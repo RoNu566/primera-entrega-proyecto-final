@@ -13,7 +13,7 @@ authRouter.post("/signIn", passport.authenticate("singupStrategy", {
 }), (req, res) => {
     req.session.user = req.user.name
     req.session.email = req.user.email
-    req.session.rol = "user";
+    req.session.rol = req.user.rol
     console.log(req.session)
     res.send(`Usuario registrado exitosamente! Ingresa a tu pérfil haciendo click <a href="/profile">Aquí</a>`)
 });
@@ -55,7 +55,7 @@ authRouter.post("/login", async (req, res) => {
 
 authRouter.get("/current", (req, res) => {
     if (req.session) {
-        return res.send({ userInfo: req.session.name });
+        return res.send({ userInfo: req.session });
     }
     res.send("Usuario No Logueado");
 });

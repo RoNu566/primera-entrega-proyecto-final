@@ -20,6 +20,11 @@ const initializedPassport = () => {
                 if (user) {
                     return done(null, false)
                 }
+                let rol = "user"
+                if (username.endsWith("@coder.com")) {
+                    rol = "admin"
+                }
+
                 const nuevoUsuario = {
                     name,
                     last_name,
