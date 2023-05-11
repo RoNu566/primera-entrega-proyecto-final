@@ -37,9 +37,9 @@ app.set("views", path.join(__dirname, "/views"));
 
 
 //-----Socket-----//
-export const port = options.server.port
-const httpServer = app.listen(8080, () => {
-  console.log("Server listening on port 8080");
+export const port = options.server.port;
+const httpServer = app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
 
 const io = new Server(httpServer);
@@ -69,9 +69,9 @@ app.use((req, res, next) => {
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: "mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority",
+      mongoUrl: options.mongoDB.URL,
     }),
-    secret: "my-secret",
+    secret: options.server.secretSession,
     saveUninitialized: true,
     resave: true,
   }));
@@ -94,7 +94,7 @@ app.use("/signIn", viewsRouter);
 app.use("/api/session", authRouter);
 
 //-----Moongose-----//
-mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongodb.net/?retryWrites=true&w=majority").then((conn) => {
+mongoose.connect(options.mongoDB.URL).then((conn) => {
   console.log("Conected to Db")
 });
 

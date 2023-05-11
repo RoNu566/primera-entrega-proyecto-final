@@ -11,7 +11,7 @@ export const options = {
         URL: process.env.MONGO_URL,
     },
     server: {
-        port: process.env.port,
+        port: process.env.PORT,
         secretSession: process.env.SECRETKEY,
     }
 };
