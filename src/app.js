@@ -17,6 +17,7 @@ import authRouter from "./routes/auth.router.js";
 
 import passport from "passport";
 import { initializedPassport } from "./config/passport.config.js";
+import { options } from "./config/options.js";
 
 const app = express();
 app.use(json());
@@ -36,6 +37,7 @@ app.set("views", path.join(__dirname, "/views"));
 
 
 //-----Socket-----//
+export const port = options.server.port
 const httpServer = app.listen(8080, () => {
   console.log("Server listening on port 8080");
 });
@@ -96,49 +98,3 @@ mongoose.connect("mongodb+srv://rocion5666:mipassword123@clusterrn.faiksh6.mongo
   console.log("Conected to Db")
 });
 
-
-
-// app.get("/session", (req, res) => {
-//   if (req.session.counter) {
-//     req.session.counter++;
-
-//     return res.send(`Cantidad de visitas ${req.send.counter}`);
-//   }
-
-//   req.session.counter = 1;
-//   res.send("Welcome!");
-// });
-
-
-// app.post("/login", (req, res) => {
-//   const { username, password } = req.body;
-
-//   if (username !== "user" && password !== "password") {
-//     return res.status(401).send("Login failed");
-//   }
-//   req.session.user = username;
-//   req.session.isAdmin = true;
-
-//   res.send("login successful");
-// });
-
-// function authenticate(req, res, next) {
-//   if (req.session.user === "user" && req.session.isAdmin) {
-//     return next();
-//   }
-
-//   return res.status(401).send("Error de autentificacion");
-// }
-
-// app.get("/privado", authenticate, (req, res) => {
-//   res.send("Login OK");
-// });
-
-// app.post("/logout", (req, res) => {
-//   req.session.destroy((err) => {
-//     if (err) {
-//       return res.status(500).send("Internal server error");
-//     }
-//     res.send("logout OK");
-//   });
-// });
