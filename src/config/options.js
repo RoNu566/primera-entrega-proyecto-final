@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
-
-dotenv.config()
+import dotenv from "dotenv"
+dotenv.config();
 
 export const options = {
     fileSystem: {
@@ -12,6 +11,7 @@ export const options = {
     },
     server: {
         port: process.env.PORT,
-        secretSession: process.env.SECRETKEY,
+        secretSession: process.env.SECRET_KEY,
     }
 };
+
